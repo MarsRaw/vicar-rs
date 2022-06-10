@@ -1,14 +1,17 @@
 
+
+
 /// Trait to enforce value() and from() consistency across the enums
-pub trait SerializableEnum<T> {
+pub trait Serializable {
     fn value(&self) -> String;
-    fn from(s:&String) -> Option<T>;
+    fn from(s:&String) -> Option<Box<Self>>;
 }
 
 ///////////////////////
 /// Format
 ///////////////////////
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Format {
     BYTE,       // one byte unsigned integer, range 0 to 255.
     HALF,       // two byte signed integer, range -32768 to 32767.
@@ -21,7 +24,7 @@ pub enum Format {
     COMPLEX     // Same as COMP
 }
 
-impl SerializableEnum<Format> for Format {
+impl Serializable for Format {
     fn value(&self) -> String {
         String::from(match *self {
             Format::BYTE => "BYTE",
@@ -36,17 +39,17 @@ impl SerializableEnum<Format> for Format {
         })
     }
 
-    fn from(s:&String) -> Option<Format> {
+    fn from(s:&String) -> Option<Box<Self>> {
         match s.to_uppercase().as_str() {
-            "BYTE" => Some(Format::BYTE),
-            "HALF" => Some(Format::HALF),
-            "FULL" => Some(Format::FULL),
-            "REAL" => Some(Format::REAL),
-            "DOUB" => Some(Format::DOUB),
-            "COMP" => Some(Format::COMP),
-            "WORD" => Some(Format::WORD),
-            "LONG" => Some(Format::LONG),
-            "COMPLEX" => Some(Format::COMPLEX),
+            "BYTE" => Some(Box::new(Format::BYTE)),
+            "HALF" => Some(Box::new(Format::HALF)),
+            "FULL" => Some(Box::new(Format::FULL)),
+            "REAL" => Some(Box::new(Format::REAL)),
+            "DOUB" => Some(Box::new(Format::DOUB)),
+            "COMP" => Some(Box::new(Format::COMP)),
+            "WORD" => Some(Box::new(Format::WORD)),
+            "LONG" => Some(Box::new(Format::LONG)),
+            "COMPLEX" => Some(Box::new(Format::COMPLEX)),
             _ => None
         }
     }
@@ -56,6 +59,7 @@ impl SerializableEnum<Format> for Format {
 /// Type
 ///////////////////////
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Type {
     IMAGE,              // standard VICAR image file. 
     PARMS,              // very old-style parameter file.
@@ -69,7 +73,7 @@ pub enum Type {
     TABULAR             // IBIS Tabular file
 }
 
-impl SerializableEnum<Type> for Type {
+impl Serializable for Type {
     fn value(&self) -> String {
         String::from(match *self {
             Type::IMAGE => "IMAGE",
@@ -83,15 +87,15 @@ impl SerializableEnum<Type> for Type {
         })
     }
 
-    fn from(s:&String) -> Option<Type> {
+    fn from(s:&String) -> Option<Box<Self>> {
         match s.to_uppercase().as_str() {
-            "IMAGE" => Some(Type::IMAGE),
-            "PARMS" => Some(Type::PARMS),
-            "PARM" => Some(Type::PARM),
-            "PARAM" => Some(Type::PARAM),
-            "GRAPH1" => Some(Type::GRAPH1),
-            "GRAPH2" => Some(Type::GRAPH2),
-            "GRAPH3" => Some(Type::GRAPH3),
+            "IMAGE" => Some(Box::new(Type::IMAGE)),
+            "PARMS" => Some(Box::new(Type::PARMS)),
+            "PARM" => Some(Box::new(Type::PARM)),
+            "PARAM" => Some(Box::new(Type::PARAM)),
+            "GRAPH1" => Some(Box::new(Type::GRAPH1)),
+            "GRAPH2" => Some(Box::new(Type::GRAPH2)),
+            "GRAPH3" => Some(Box::new(Type::GRAPH3)),
             _ => None
         }
     }
@@ -101,13 +105,14 @@ impl SerializableEnum<Type> for Type {
 /// Org
 ///////////////////////
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Org {
     BSQ,        // Band SeQuential. N1=Samples, N2=Lines, N3=Bands
     BIL,        // Band interleaved by line. N1=Samples, N2=Bands, N3=Lines
     BIP         // Band interleaved by pixel. N1=Bands, N2=Samples, N3=Lines
 }
 
-impl SerializableEnum<Org> for Org {
+impl Serializable for Org {
     fn value(&self) -> String {
         String::from(match *self {
             Org::BSQ => "BSQ",
@@ -116,11 +121,11 @@ impl SerializableEnum<Org> for Org {
         })
     }
 
-    fn from(s:&String) -> Option<Org> {
+    fn from(s:&String) -> Option<Box<Self>> {
         match s.to_uppercase().as_str() {
-            "BSQ" => Some(Org::BSQ),
-            "BIL" => Some(Org::BIL),
-            "BIP" => Some(Org::BIP),
+            "BSQ" => Some(Box::new(Org::BSQ)),
+            "BIL" => Some(Box::new(Org::BIL)),
+            "BIP" => Some(Box::new(Org::BIP)),
             _ => None
         }
     }
@@ -130,6 +135,7 @@ impl SerializableEnum<Org> for Org {
 /// Host
 ///////////////////////
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Host {
     ALLIANT,        // Alliant FX series computer.
     CRAY,           // Cray (port is incomplete, and Cray format is not yet supported).
@@ -144,7 +150,7 @@ pub enum Host {
     VAXVMS          // VAX running VMS
 }
 
-impl SerializableEnum<Host> for Host {
+impl Serializable for Host {
     fn value(&self) -> String {
         String::from(match *self {
             Host::ALLIANT => "ALLIANT",
@@ -161,19 +167,19 @@ impl SerializableEnum<Host> for Host {
         })
     }
 
-    fn from(s:&String) -> Option<Host> {
+    fn from(s:&String) -> Option<Box<Self>> {
         match s.to_uppercase().as_str() {
-            "ALLIANT" => Some(Host::ALLIANT),
-            "CRAY" => Some(Host::CRAY),
-            "DECSTATN" => Some(Host::DECSTATN),
-            "HP-700" => Some(Host::HP700),
-            "MAC-AUX" => Some(Host::MACAUX),
-            "MAC-MPW" => Some(Host::MACMPW),
-            "SGI" => Some(Host::SGI),
-            "SUN-3" => Some(Host::SUN3),
-            "SUN-4" => Some(Host::SUN4),
-            "TEK" => Some(Host::TEK),
-            "VAX-VMS" => Some(Host::VAXVMS),
+            "ALLIANT" => Some(Box::new(Host::ALLIANT)),
+            "CRAY" => Some(Box::new(Host::CRAY)),
+            "DECSTATN" => Some(Box::new(Host::DECSTATN)),
+            "HP-700" => Some(Box::new(Host::HP700)),
+            "MAC-AUX" => Some(Box::new(Host::MACAUX)),
+            "MAC-MPW" => Some(Box::new(Host::MACMPW)),
+            "SGI" => Some(Box::new(Host::SGI)),
+            "SUN-3" => Some(Box::new(Host::SUN3)),
+            "SUN-4" => Some(Box::new(Host::SUN4)),
+            "TEK" => Some(Box::new(Host::TEK)),
+            "VAX-VMS" => Some(Box::new(Host::VAXVMS)),
             _ => None
         }
     }
@@ -183,13 +189,14 @@ impl SerializableEnum<Host> for Host {
 /// INTFMT
 ///////////////////////
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum IntFmt {
     HIGH,           // High byte first, big endian. 
     LOW             // Low byte first, little endian.
 }
 
 
-impl SerializableEnum<IntFmt> for IntFmt {
+impl Serializable for IntFmt {
     fn value(&self) -> String {
         String::from(match *self {
             IntFmt::HIGH => "HIGH",
@@ -197,10 +204,10 @@ impl SerializableEnum<IntFmt> for IntFmt {
         })
     }
 
-    fn from(s:&String) -> Option<IntFmt> {
+    fn from(s:&String) -> Option<Box<Self>> {
         match s.to_uppercase().as_str() {
-            "HIGH" => Some(IntFmt::HIGH),
-            "LOW" => Some(IntFmt::LOW),
+            "HIGH" => Some(Box::new(IntFmt::HIGH)),
+            "LOW" => Some(Box::new(IntFmt::LOW)),
             _ => None
         }
     }
@@ -210,6 +217,7 @@ impl SerializableEnum<IntFmt> for IntFmt {
 /// RealFmt
 ///////////////////////
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum RealFmt {
     IEEE,           // IEEE 754 format, with the high-order bytes (containing the exponent) first. Used
                     // for all other hosts (except for Cray, which is unimplemented).
@@ -219,7 +227,7 @@ pub enum RealFmt {
                     // format. Used for host VAX-VMS only.
 }
 
-impl SerializableEnum<RealFmt> for RealFmt {
+impl Serializable for RealFmt {
     fn value(&self) -> String {
         String::from(match *self {
             RealFmt::IEEE => "IEEE",
@@ -228,11 +236,11 @@ impl SerializableEnum<RealFmt> for RealFmt {
         })
     }
 
-    fn from(s:&String) -> Option<RealFmt> {
+    fn from(s:&String) -> Option<Box<Self>> {
         match s.to_uppercase().as_str() {
-            "IEEE" => Some(RealFmt::IEEE),
-            "RIEEE" => Some(RealFmt::RIEEE),
-            "VAX" => Some(RealFmt::VAX),
+            "IEEE" => Some(Box::new(RealFmt::IEEE)),
+            "RIEEE" => Some(Box::new(RealFmt::RIEEE)),
+            "VAX" => Some(Box::new(RealFmt::VAX)),
             _ => None
         }
     }
@@ -249,7 +257,7 @@ impl SerializableEnum<RealFmt> for RealFmt {
 /// 
 ///////////////////////
 
-
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum SystemLabel {
     LBLSIZE,            // integer - The size of the label storage area, in bytes
     FORMAT,             // string enum BYTE, HALF, FULL, REAL, DOUB, COMP, WORD, LONG, COMPLEX
@@ -330,9 +338,9 @@ are not normally present.
 
 The label values may be of three types: integer, real, or string
 */
-pub struct KeyValuePair<T> {
-    pub key:String,
-    pub value:T
+pub struct KeyValuePair<A, B> {
+    pub key:A,
+    pub value:B
 }
 
 // impl<T> KeyValuePair<T> {
