@@ -6,13 +6,15 @@ authors = ["Kevin M. Gill <apoapsys@gmail.com>"]
 description = "VICAR file format support"
 license = "MIT" 
 
-[[bin]]
-name = "main"
-path = "bin/main.rs"
+# [[bin]]
+# name = "main"
+# path = "bin/main.rs"
 
-[lib]
-name = "vicar"
+# [lib]
+# name = "vicar"
 
 [dependencies]
-sciimg = "0.2.10"
+sciimg = {path = "sciimg" }
 memmap = "0.7.0"
+pvl = {path = "pvl"}
+itertools = "0.10.5"
