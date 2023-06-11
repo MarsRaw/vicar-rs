@@ -968,7 +968,6 @@ dependencies = [
  "anyhow",
  "itertools",
  "lazy_static",
- "memmap",
  "pvl",
  "regex",
  "sciimg",

@@ -1,8 +1,6 @@
-use itertools::iproduct;
-use pvl::{parse_and_print_pvl, print_grouping, print_kvp, PropertyGrouping, Pvl};
+use pvl::{PropertyGrouping, Pvl};
 use regex::Regex;
-use sciimg::prelude::*;
-use sciimg::{binfilereader::*, enums::ImageMode, image, imagebuffer};
+use sciimg::binfilereader::*;
 use std::borrow::Cow;
 use std::ffi::OsStr;
 use std::fs;
@@ -229,7 +227,7 @@ impl Value {
         if self.value_type != ValueType::Undetermined && self.value_type != ValueType::String {
             Err(VicarError::InvalidType)
         } else {
-            Ok(self.value_raw.replace("\"", "").replace("'", "").to_owned())
+            Ok(self.value_raw.replace(['\"', '\''], ""))
         }
     }
 
@@ -304,20 +302,12 @@ impl VicarReader {
                     .value
                     .parse_usize()
                     .unwrap_or(0);
-                let sample_bits = image_object
-                    .get_property("SAMPLE_BITS")
-                    .unwrap()
-                    .value
-                    .parse_i32()
-                    .unwrap_or(0);
                 let bands = image_object
                     .get_property("BANDS")
                     .unwrap()
                     .value
                     .parse_usize()
                     .unwrap_or(0);
-
-                println!("{:?}", pvl.get_property("^IMAGE"));
 
                 // Holy function chain, batman!
                 let filename = pvl
@@ -339,18 +329,18 @@ impl VicarReader {
                 let reader = BinFileReader::new(&referenced_image_file_path);
 
                 Ok(VicarReader {
-                    reader: reader,
+                    reader,
                     data_start: 0,
                     label_size: 0,
                     dimensions: bands,
                     recsize: 0,
-                    lines: lines,
-                    samples: samples,
-                    bands: bands,
+                    lines,
+                    samples,
+                    bands,
                     org: DataOrganization::Bsq,
                     format: PixelFormat::Byte,
                     data_type: DataType::Image,
-                    strings: strings,
+                    strings,
                     binary_bytes_before_record: 0,
                     binary_bytes_header: 0,
                 })
@@ -429,18 +419,18 @@ impl VicarReader {
         let (lines, samples, bands) = VicarReader::to_lines_samples_bands(n1, n2, n3, organization);
 
         Ok(VicarReader {
-            reader: reader,
+            reader,
             data_start: label_start + binary_header_stop + nbb,
             label_size: lblsize,
             dimensions: dim,
-            recsize: recsize,
-            lines: lines,
-            samples: samples,
-            bands: bands,
+            recsize,
+            lines,
+            samples,
+            bands,
             org: organization,
-            format: format,
-            data_type: data_type,
-            strings: strings,
+            format,
+            data_type,
+            strings,
             binary_bytes_before_record: nbb,
             binary_bytes_header: nlb,
         })
@@ -459,13 +449,13 @@ impl VicarReader {
         }
     }
 
-    fn to_n1_n2_n3(&self, line: usize, sample: usize, band: usize) -> (usize, usize, usize) {
-        match self.org {
-            DataOrganization::Bsq => (sample, line, band),
-            DataOrganization::Bil => (sample, band, line),
-            DataOrganization::Bip => (band, sample, line),
-        }
-    }
+    // fn to_n1_n2_n3(&self, line: usize, sample: usize, band: usize) -> (usize, usize, usize) {
+    //     match self.org {
+    //         DataOrganization::Bsq => (sample, line, band),
+    //         DataOrganization::Bil => (sample, band, line),
+    //         DataOrganization::Bip => (band, sample, line),
+    //     }
+    // }
 
     fn read_vicar_to_string_lossy<S>(file_path: &S) -> Result<String, VicarError>
     where
@@ -476,7 +466,7 @@ impl VicarReader {
                 Cow::Borrowed(s) => Ok(s.to_string()),
                 Cow::Owned(s) => Ok(s),
             },
-            Err(why) => return Err(VicarError::General(t!(why))),
+            Err(why) => Err(VicarError::General(t!(why))),
         }
     }
 
@@ -507,7 +497,7 @@ impl VicarReader {
     fn _scan_for_property(strings: &String, key: &str) -> Result<usize, VicarError> {
         let key_eq = format!("{}=", key);
         for i in 0..(strings.len() - key_eq.len()) {
-            if strings[i..(i + key_eq.len())].to_string() == key_eq {
+            if strings[i..(i + key_eq.len())] == key_eq {
                 return Ok(i);
             }
         }
@@ -520,10 +510,7 @@ impl VicarReader {
     }
 
     fn _has_property(strings: &String, key: &str) -> bool {
-        match VicarReader::_scan_for_property(strings, key) {
-            Ok(_) => true,
-            Err(_) => false,
-        }
+        VicarReader::_scan_for_property(strings, key).is_ok()
     }
 
     pub fn has_property(&self, key: &str) -> bool {
@@ -604,141 +591,11 @@ impl VicarReader {
             PixelFormat::Full | PixelFormat::Long => {
                 Ok(self.reader.read_i32_with_endiness(start, Endian::BigEndian) as f32)
             }
-            PixelFormat::Real => {
-                Ok(self.reader.read_f32_with_endiness(start, Endian::BigEndian) as f32)
-            }
+            PixelFormat::Real => Ok(self.reader.read_f32_with_endiness(start, Endian::BigEndian)),
             PixelFormat::Doub => {
                 Ok(self.reader.read_i64_with_endiness(start, Endian::BigEndian) as f32)
             }
             PixelFormat::Comp | PixelFormat::Complex => todo!(),
         }
     }
-}
-
-pub fn test_with_label(lbl_file: &str) {
-    let p = Path::new(lbl_file);
-    if let Ok(pvl) = Pvl::load(p) {
-        if let Some(image_object) = pvl.get_object("IMAGE") {
-            // print_grouping(image_object);
-
-            let lines = image_object
-                .get_property("LINES")
-                .unwrap()
-                .value
-                .parse_usize()
-                .unwrap_or(0);
-            let samples = image_object
-                .get_property("LINE_SAMPLES")
-                .unwrap()
-                .value
-                .parse_usize()
-                .unwrap_or(0);
-            let sample_bits = image_object
-                .get_property("SAMPLE_BITS")
-                .unwrap()
-                .value
-                .parse_i32()
-                .unwrap_or(0);
-            let bands = image_object
-                .get_property("BANDS")
-                .unwrap()
-                .value
-                .parse_usize()
-                .unwrap_or(0);
-
-            println!("{:?}", pvl.get_property("^IMAGE"));
-
-            // Holy function chain, batman!
-            let filename = pvl
-                .get_property("^IMAGE")
-                .unwrap()
-                .value
-                .parse_array()
-                .unwrap()
-                .first()
-                .unwrap()
-                .to_owned()
-                .parse_string()
-                .unwrap();
-
-            let referenced_image_file_path = p.parent().unwrap().join(Path::new(&filename));
-            println!("File Path: {:?}", referenced_image_file_path);
-
-            println!("Lines: {}", lines);
-            println!("Samples: {}", samples);
-            println!("Bits per Sample: {}", sample_bits);
-            println!("Bands: {}", bands);
-
-            let file_reader = BinFileReader::new(&referenced_image_file_path);
-            let mut image = Image::new_with_bands(
-                samples as usize,
-                lines as usize,
-                bands as usize,
-                match sample_bits {
-                    8 => ImageMode::U8BIT,
-                    12 => ImageMode::U12BIT,
-                    16 => ImageMode::U16BIT,
-                    _ => panic!("Unsupported pixel depth: {}", sample_bits),
-                },
-            )
-            .unwrap();
-
-            iproduct!(0..lines, 0..samples, 0..bands).for_each(|(y, x, b)| {
-                let byte_index = (lines * samples * b) + y * samples + x;
-                let pixel_value = file_reader.read_u8(byte_index);
-                image.put(x, y, pixel_value as f32, b);
-            });
-
-            image.save("test.png").expect("Failed to save image");
-        }
-
-        // pvl.properties.into_iter().for_each(|p| {
-        //     print_kvp(&p, false);
-        // });
-        // pvl.groups.into_iter().for_each(|g| {
-        //     print_grouping(&g);
-        // });
-        // pvl.objects.into_iter().for_each(|g| {
-        //     print_grouping(&g);
-        // });
-    }
-}
-
-pub fn main() {
-    //"pvl/tests/testdata/msl/mahli/3423MH0002970011201599C00_DRCX.LBL"
-    //pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.LBL
-    //parse_and_print_pvl("pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.LBL");
-
-    //let ncam = "pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.LBL";
-    //let mahli = "pvl/tests/testdata/msl/mahli/3423MH0002970011201599C00_DRCX.LBL";
-    //test_with_label(ncam);
-
-    let mahli = "pvl/tests/testdata/msl/mahli/3423MH0002970011201599C00_DRCX.LBL";
-    let cassini_wac = "pvl/tests/testdata/cassini/wac/W1884114531_2.IMG";
-    let ncam = "pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.IMG";
-    //match VicarReader::new(mahli) {
-    match VicarReader::new_from_detached_label(mahli) {
-        Ok(vr) => {
-            // if vr.has_internal_label() {
-            //     println!("{:?}", vr.scan_for_property("LBLSIZE"));
-            //     println!("{:?}", vr.extract_property_raw("LBLSIZE"));
-            //     println!("{:?}", vr.get_property("LBLSIZE"));
-            //     println!("*********************************************");
-            // }
-
-            println!("{:?}", vr.to_string());
-
-            let mut image =
-                Image::new_with_bands(vr.samples, vr.lines, vr.bands, ImageMode::U16BIT).unwrap();
-
-            iproduct!(0..vr.lines, 0..vr.samples, 0..vr.bands).for_each(|(y, x, b)| {
-                let pixel_value = vr.get_pixel_value(y, x, b).unwrap();
-                // println!("Pixel Value: {}", pixel_value);
-                image.put(x, y, pixel_value as f32, b);
-            });
-            image.normalize_between(0.0, 65535.0);
-            image.save("test.png").expect("Failed to save image");
-        }
-        Err(why) => println!("Error: {:?}", why),
-    };
 }
