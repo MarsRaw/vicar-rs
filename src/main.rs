@@ -1,11 +1,17 @@
 use itertools::iproduct;
-use pvl::{print_grouping, print_kvp, PropertyGrouping, Pvl};
+use pvl::{parse_and_print_pvl, print_grouping, print_kvp, PropertyGrouping, Pvl};
 use sciimg::prelude::*;
 use sciimg::{binfilereader::*, enums::ImageMode, image, imagebuffer};
 use std::path::Path;
 pub fn main() {
     //"pvl/tests/testdata/msl/mahli/3423MH0002970011201599C00_DRCX.LBL"
-    let p = Path::new("pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.LBL");
+    //pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.LBL
+    //parse_and_print_pvl("pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.LBL");
+
+    let ncam = "pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.LBL";
+    let mahli = "pvl/tests/testdata/msl/mahli/3423MH0002970011201599C00_DRCX.LBL";
+
+    let p = Path::new(ncam);
     if let Ok(pvl) = Pvl::load(p) {
         if let Some(image_object) = pvl.get_object("IMAGE") {
             // print_grouping(image_object);
@@ -34,6 +40,8 @@ pub fn main() {
                 .value
                 .parse_usize()
                 .unwrap_or(0);
+
+            println!("{:?}", pvl.get_property("^IMAGE"));
 
             // Holy function chain, batman!
             let filename = pvl
