@@ -1,6 +1,0 @@
-[submodule "pvl"]
-	path = pvl
-	url = git@github.com:kmgill/pvl.git
-[submodule "sciimg"]
-	path = sciimg
-	url = git@github.com:kmgill/sciimg.git
