@@ -10,8 +10,8 @@ license = "MIT"
 # name = "main"
 # path = "bin/main.rs"
 
-# [lib]
-# name = "vicar"
+[lib]
+name = "vicar"
 
 [dependencies]
 sciimg = {path = "sciimg" }

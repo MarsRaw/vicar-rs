@@ -120,6 +120,7 @@ pub enum VicarError {
     General(String),
     PropertyNotFound(String),
     UnexpectedEnum(String),
+    LabelError(String),
 }
 
 impl Error for VicarError {}
@@ -256,18 +257,18 @@ pub struct KeyValuePair {
 pub struct VicarReader {
     reader: BinFileReader,
     data_start: usize,
-    label_size: usize,
-    dimensions: usize,
-    binary_bytes_before_record: usize,
-    binary_bytes_header: usize,
-    recsize: usize,
-    lines: usize,
-    samples: usize,
-    bands: usize,
-    org: DataOrganization,
-    format: PixelFormat,
-    data_type: DataType,
-    strings: String,
+    pub label_size: usize,
+    pub dimensions: usize,
+    pub binary_bytes_before_record: usize,
+    pub binary_bytes_header: usize,
+    pub recsize: usize,
+    pub lines: usize,
+    pub samples: usize,
+    pub bands: usize,
+    pub org: DataOrganization,
+    pub format: PixelFormat,
+    pub data_type: DataType,
+    pub strings: String,
 }
 
 impl fmt::Display for VicarReader {
@@ -282,6 +283,85 @@ impl fmt::Display for VicarReader {
 }
 
 impl VicarReader {
+    pub fn new_from_detached_label<S>(label_file_path: &S) -> Result<Self, VicarError>
+    where
+        S: AsRef<Path> + ?Sized + AsRef<OsStr>,
+    {
+        let p = Path::new(label_file_path);
+        if let Ok(pvl) = Pvl::load(p) {
+            if let Some(image_object) = pvl.get_object("IMAGE") {
+                // print_grouping(image_object);
+
+                let lines = image_object
+                    .get_property("LINES")
+                    .unwrap()
+                    .value
+                    .parse_usize()
+                    .unwrap_or(0);
+                let samples = image_object
+                    .get_property("LINE_SAMPLES")
+                    .unwrap()
+                    .value
+                    .parse_usize()
+                    .unwrap_or(0);
+                let sample_bits = image_object
+                    .get_property("SAMPLE_BITS")
+                    .unwrap()
+                    .value
+                    .parse_i32()
+                    .unwrap_or(0);
+                let bands = image_object
+                    .get_property("BANDS")
+                    .unwrap()
+                    .value
+                    .parse_usize()
+                    .unwrap_or(0);
+
+                println!("{:?}", pvl.get_property("^IMAGE"));
+
+                // Holy function chain, batman!
+                let filename = pvl
+                    .get_property("^IMAGE")
+                    .unwrap()
+                    .value
+                    .parse_array()
+                    .unwrap()
+                    .first()
+                    .unwrap()
+                    .to_owned()
+                    .parse_string()
+                    .unwrap();
+
+                let referenced_image_file_path = p.parent().unwrap().join(Path::new(&filename));
+                println!("File Path: {:?}", referenced_image_file_path);
+
+                let strings = VicarReader::read_vicar_to_string_lossy(&referenced_image_file_path)?;
+                let reader = BinFileReader::new(&referenced_image_file_path);
+
+                Ok(VicarReader {
+                    reader: reader,
+                    data_start: 0,
+                    label_size: 0,
+                    dimensions: bands,
+                    recsize: 0,
+                    lines: lines,
+                    samples: samples,
+                    bands: bands,
+                    org: DataOrganization::Bsq,
+                    format: PixelFormat::Byte,
+                    data_type: DataType::Image,
+                    strings: strings,
+                    binary_bytes_before_record: 0,
+                    binary_bytes_header: 0,
+                })
+            } else {
+                Err(VicarError::PropertyNotFound(t!("IMAGE")))
+            }
+        } else {
+            Err(VicarError::LabelError(t!("Error loading detached label")))
+        }
+    }
+
     pub fn new<S>(file_path: &S) -> Result<Self, VicarError>
     where
         S: AsRef<Path> + ?Sized + AsRef<OsStr>,
@@ -439,6 +519,25 @@ impl VicarReader {
         VicarReader::_scan_for_property(&self.strings, key)
     }
 
+    fn _has_property(strings: &String, key: &str) -> bool {
+        match VicarReader::_scan_for_property(strings, key) {
+            Ok(_) => true,
+            Err(_) => false,
+        }
+    }
+
+    pub fn has_property(&self, key: &str) -> bool {
+        VicarReader::_has_property(&self.strings, key)
+    }
+
+    fn _has_internal_label(strings: &String) -> bool {
+        VicarReader::_has_property(strings, "LBLSIZE")
+    }
+
+    pub fn has_internal_label(&self) -> bool {
+        VicarReader::_has_internal_label(&self.strings)
+    }
+
     pub fn _extract_property_raw(strings: &String, key: &str) -> Result<String, VicarError> {
         let index = VicarReader::_scan_for_property(strings, key)?;
         let mut end_index = index;
@@ -480,12 +579,6 @@ impl VicarReader {
     pub fn get_property(&self, key: &str) -> Result<KeyValuePair, VicarError> {
         VicarReader::_get_property(&self.strings, key)
     }
-
-    /*
-        Bsq, // Band SeQuential, N1=Samples, N2=Lines, N3=Bands
-    Bil, // Band Interleaved, N1=Samples, N2=Bands, N3=Lines
-    Bip, // Band Interleaved by Pixel, N1=Bands, N2=Samples, N3=Lines
-     */
 
     fn get_pixel_index(&self, line: usize, sample: usize, band: usize) -> usize {
         (self.lines * self.samples * self.format.bytes_per_sample() * band
@@ -620,14 +713,18 @@ pub fn main() {
     //let mahli = "pvl/tests/testdata/msl/mahli/3423MH0002970011201599C00_DRCX.LBL";
     //test_with_label(ncam);
 
+    let mahli = "pvl/tests/testdata/msl/mahli/3423MH0002970011201599C00_DRCX.LBL";
     let cassini_wac = "pvl/tests/testdata/cassini/wac/W1884114531_2.IMG";
     let ncam = "pvl/tests/testdata/msl/navcam/NRB_701384494RAD_F0933408NCAM00200M1.IMG";
-    match VicarReader::new(cassini_wac) {
+    //match VicarReader::new(mahli) {
+    match VicarReader::new_from_detached_label(mahli) {
         Ok(vr) => {
-            println!("{:?}", vr.scan_for_property("LBLSIZE"));
-            println!("{:?}", vr.extract_property_raw("LBLSIZE"));
-            println!("{:?}", vr.get_property("LBLSIZE"));
-            println!("*********************************************");
+            // if vr.has_internal_label() {
+            //     println!("{:?}", vr.scan_for_property("LBLSIZE"));
+            //     println!("{:?}", vr.extract_property_raw("LBLSIZE"));
+            //     println!("{:?}", vr.get_property("LBLSIZE"));
+            //     println!("*********************************************");
+            // }
 
             println!("{:?}", vr.to_string());
 
