@@ -1,0 +1,253 @@
+PDS_VERSION_ID                   = PDS3
+
+/* File Structure */
+
+RECORD_TYPE                      = FIXED_LENGTH
+RECORD_BYTES                     = 512
+FILE_RECORDS                     = 1397
+
+/* Pointers to Data Objects */
+
+^HEADER                          = ("v1883935188_1.qub", 1)
+^HISTORY                         = ("v1883935188_1.qub", 22)
+^QUBE                            = ("v1883935188_1.qub", 47)
+
+/* Identification Data Elements */
+
+MISSION_NAME                     = "CASSINI-HUYGENS"
+MISSION_PHASE_NAME               = "EXTENDED-EXTENDED MISSION"
+INSTRUMENT_HOST_NAME             = "CASSINI ORBITER"
+INSTRUMENT_NAME                  = "VISUAL AND INFRARED MAPPING SPECTROMETER"
+INSTRUMENT_ID                    = VIMS
+DATA_SET_ID                      = "CO-E/V/J/S-VIMS-2-QUBE-V1.0"
+PRODUCT_ID                       = "1_1883935188.13981"
+PRODUCT_VERSION_TYPE             = "FINAL"
+FLIGHT_SOFTWARE_VERSION_ID       = "8.1"
+SOFTWARE_VERSION_ID              = "VIMS 10.0 05-24-2006"
+TARGET_NAME                      = "TITAN"
+TARGET_DESC                      = "TITAN"
+IMAGE_OBSERVATION_TYPE           = SCIENCE
+SPACECRAFT_CLOCK_CNT_PARTITION   = 1
+SPACECRAFT_CLOCK_START_COUNT     = "1/1883935199.157"
+SPACECRAFT_CLOCK_STOP_COUNT      = "1/1883935353.126"
+NATIVE_START_TIME                = "1883935188.13981"
+NATIVE_STOP_TIME                 = "1883935347.09908"
+START_TIME                       = 2017-255T18:10:02.599
+STOP_TIME                        = 2017-255T18:12:41.343
+HOUSEKEEPING_CLOCK_COUNT         = 1883935323.131
+PRODUCT_CREATION_TIME            = 2017-256T04:47:53.000
+OBSERVATION_ID                   = "VIMS_293TI_MIDIRTMAP003"
+COMMAND_FILE_NAME                = "VIMS_293TI_MIDIRTMAP003_CIRS.V1.ioi"
+COMMAND_SEQUENCE_NUMBER          = 114
+EARTH_RECEIVED_START_TIME        = 2017-256T09:44:22.066
+EARTH_RECEIVED_STOP_TIME         = 2017-256T09:44:46.640
+MISSING_PACKET_FLAG              = NO
+DESCRIPTION                      = "N/A"
+PARAMETER_SET_ID                 = "VIMS_293TI_MIDIRTMAP003_CIRS_001"
+SEQUENCE_ID                      = "S101"
+SEQUENCE_TITLE                   = "VIMS_293TI_MIDIRTMAP003_CIRS"
+TELEMETRY_FORMAT_ID              = UNK
+DATA_REGION                      = "N/A"
+OVERWRITTEN_CHANNEL_FLAG         = OFF
+
+/* Instrument Status (IR, Visible) */
+   /* In the following section, parameters with single values apply to */
+   /* both the IR and visible portions of the instrument.   Parameters */
+   /* with two values apply to the IR and the visible respectively.  For */
+   /* parameters with more than two values, see the accompanying comment */
+   /* for an indication of how the values are to be applied. */
+
+INSTRUMENT_MODE_ID               = "IMAGE"
+INTERFRAME_DELAY_DURATION        = 540.000000
+COMPRESSOR_ID                    = 1
+INST_CMPRS_NAME                  = "OMEGA"
+INST_CMPRS_RATIO                 = 2.794406
+DATA_BUFFER_STATE_FLAG           = ENABLED
+INSTRUMENT_DATA_RATE             = 94.208
+MISSING_PIXELS                   = 0
+POWER_STATE_FLAG                 = (ON,ON)
+GAIN_MODE_ID                     = (LOW,LOW)
+EXPOSURE_DURATION                = (160.000000,4800.000000)
+BACKGROUND_SAMPLING_MODE_ID      = (SINGLE,ZERO_SUB)
+X_OFFSET                         = 31
+Z_OFFSET                         = 29
+SWATH_WIDTH                      = 30
+SWATH_LENGTH                     = 30
+SPECTRAL_EDITING_FLAG            = OFF
+SPECTRAL_SUMMING_FLAG            = OFF
+OFFSET_FLAG                      = OFF
+SNAPSHOT_MODE_FLAG               = ON
+PACKING_FLAG                     = OFF
+
+/* Temps shown are IR high res, IR low res, Visible (degrees K) */
+
+DETECTOR_TEMPERATURE             = (59.307236,58.030975,231.506805)
+
+/* Temps shown are IR primary, IR secondary, Visible (degrees K) */
+
+OPTICS_TEMPERATURE               = (131.914490,126.131721,272.972565)
+
+/* Sampling modes shown are IR, visible spatial, and visible spectral */
+
+SAMPLING_MODE_ID                 = ("NORMAL","NORMAL")
+
+/* Instrument status: IR */
+
+BIAS_STATE_ID                    = LOW
+SCAN_MODE_ID                     = BOTH
+SHUTTER_STATE_FLAG               = ENABLED
+INTEGRATION_DELAY_FLAG           = DISABLED
+INTERLINE_DELAY_DURATION         = 415.000000
+BACKGROUND_SAMPLING_FREQUENCY    = 1
+
+/* Temperatures shown are for spectrometer, then grating (degrees K). */
+
+INSTRUMENT_TEMPERATURE           = (129.222900,127.785202)
+FAST_HK_ITEM_NAME                = ("IR_DETECTOR_TEMP_HIGH_RES_1",
+                                    "IR_GRATING_TEMP",
+                                    "IR_PRIMARY_OPTICS_TEMP",
+                                    "IR_SPECTROMETER_BODY_TEMP_1")
+FAST_HK_PICKUP_RATE              = 2
+
+/* Instrument status: visible */
+
+ANTIBLOOMING_STATE_FLAG          = OFF
+
+/* Data Object Definitions */
+
+OBJECT                           = HEADER
+  BYTES                          = 10752
+  HEADER_TYPE                    = ISIS
+  INTERCHANGE_FORMAT             = ASCII
+END_OBJECT                       = HEADER
+
+OBJECT                           = HISTORY
+  BYTES                          = 12800
+  HISTORY_TYPE                   = ISIS
+  INTERCHANGE_FORMAT             = ASCII
+END_OBJECT                       = HISTORY
+
+OBJECT                           = SPECTRAL_QUBE
+  AXES                           = 3
+  AXIS_NAME                      = (SAMPLE,BAND,LINE)
+  FILE_STATE                     = CLEAN
+  CHECKSUM                       = 1900144997
+
+/* Core description. */
+
+  CORE_ITEMS                     = (30,352,30)
+  CORE_ITEM_BYTES                = 2
+  CORE_ITEM_TYPE                 = SUN_INTEGER
+  CORE_BASE                      = 0.0
+  CORE_MULTIPLIER                = 1.0
+  CORE_VALID_MINIMUM             = -4095
+  CORE_NULL                      = -8192
+  CORE_LOW_REPR_SATURATION       = -32767
+  CORE_LOW_INSTR_SATURATION      = -32766
+  CORE_HIGH_REPR_SATURATION      = -32764
+  CORE_HIGH_INSTR_SATURATION     = -32765
+  CORE_MINIMUM_DN                = -122
+  CORE_NAME                      = "RAW DATA NUMBER"
+  CORE_UNIT                      = DIMENSIONLESS
+  
+
+/* Suffix description. */
+
+  SUFFIX_ITEMS                   = (1,4,0)
+  SAMPLE_SUFFIX_NAME             = BACKGROUND
+  BAND_SUFFIX_NAME               = (IR_DETECTOR_TEMP_HIGH_RES_1,
+                                    IR_GRATING_TEMP,IR_PRIMARY_OPTICS_TEMP,
+                                    IR_SPECTROMETER_BODY_TEMP_1)
+  GROUP                          = SAMPLE_SUFFIX
+    SUFFIX_NAME                  = BACKGROUND
+    SUFFIX_UNIT                  = DIMENSIONLESS
+    SUFFIX_ITEM_BYTES            = 4
+    SUFFIX_ITEM_TYPE             = SUN_INTEGER
+    SUFFIX_BASE                  = 0.0
+    SUFFIX_MULTIPLIER            = 1.0
+    SUFFIX_VALID_MINIMUM         = 0
+    SUFFIX_NULL                  = -8192
+    SUFFIX_LOW_REPR_SAT          = -32767
+    SUFFIX_LOW_INSTR_SAT         = -32766
+    SUFFIX_HIGH_REPR_SAT         = -32764
+    SUFFIX_HIGH_INSTR_SAT        = -32765
+  END_GROUP                      = SAMPLE_SUFFIX
+
+  GROUP                          = BAND_SUFFIX
+    SUFFIX_NAME                  = (X_SCAN_DRIVE_CURRENT,
+                                    Z_SCAN_DRIVE_CURRENT,
+                                    X_SCAN_MIRROR_POSITION,
+                                    Z_SCAN_MIRROR_POSITION)
+    SUFFIX_UNIT                  = (DIMENSIONLESS,DIMENSIONLESS,
+                                    DIMENSIONLESS,DIMENSIONLESS)
+    SUFFIX_ITEM_TYPE             = (SUN_INTEGER,SUN_INTEGER,
+                                    SUN_INTEGER,SUN_INTEGER)
+    SUFFIX_ITEM_BYTES            = (4,4,4,4)
+    SUFFIX_BASE                  = (0.0,0.0,0.0,0.0)
+    SUFFIX_MULTIPLIER            = (1.0,1.0,1.0,1.0)
+    SUFFIX_VALID_MINIMUM         = (0,0,0,0)
+    SUFFIX_NULL                  = (-8192,-8192,-8192,-8192)
+    SUFFIX_LOW_REPR_SAT          = (-32767,-32767,-32767,-32767)
+    SUFFIX_LOW_INSTR_SAT         = (-32766,-32766,-32766,-32766)
+    SUFFIX_HIGH_INSTR_SAT        = (-32765,-32765,-32765,-32765)
+    SUFFIX_HIGH_REPR_SAT         = (-32764,-32764,-32764,-32764)
+  END_GROUP                      = BAND_SUFFIX
+       
+
+/* Spectral axis description */
+
+  GROUP                          = BAND_BIN
+    BAND_BIN_CENTER = (0.35,0.36,0.37,0.37,0.38,0.39,0.40,0.40,0.41,0.42,
+      0.42,0.43,0.44,0.45,0.45,0.46,0.47,0.48,0.49,0.49,0.50,0.51,0.51,0.52,
+      0.53,0.53,0.54,0.55,0.56,0.56,0.57,0.58,0.59,0.59,0.60,0.61,0.62,0.62,
+      0.63,0.64,0.64,0.65,0.66,0.67,0.67,0.68,0.69,0.70,0.70,0.71,0.72,0.72,
+      0.73,0.74,0.75,0.75,0.76,0.77,0.78,0.78,0.79,0.80,0.81,0.81,0.82,0.83,
+      0.83,0.84,0.85,0.86,0.86,0.87,0.88,0.89,0.89,0.90,0.91,0.92,0.92,0.93,
+      0.94,0.94,0.95,0.96,0.97,0.97,0.98,0.99,1.00,1.00,1.01,1.02,1.02,1.03,
+      1.04,1.05,0.863,0.879,0.896,0.912,0.928,0.945,0.961,0.977,0.994,1.010,
+      1.026,1.043,1.060,1.077,1.093,1.109,1.125,1.142,1.159,1.175,1.191,1.207,
+      1.224,1.240,1.257,1.273,1.290,1.306,1.322,1.338,1.355,1.372,1.388,1.404,
+      1.421,1.437,1.453,1.470,1.487,1.503,1.519,1.535,1.552,1.569,1.585,1.597,
+      1.620,1.637,1.651,1.667,1.684,1.700,1.717,1.733,1.749,1.766,1.783,1.799,
+      1.815,1.831,1.848,1.864,1.882,1.898,1.914,1.930,1.947,1.964,1.980,1.997,
+      2.013,2.029,2.046,2.063,2.079,2.095,2.112,2.128,2.145,2.162,2.178,2.194,
+      2.211,2.228,2.245,2.261,2.277,2.294,2.311,2.328,2.345,2.363,2.380,2.397,
+      2.413,2.430,2.446,2.462,2.479,2.495,2.512,2.528,2.544,2.559,2.577,2.593,
+      2.610,2.625,2.642,2.656,2.676,2.691,2.707,2.728,2.743,2.758,2.776,2.794,
+      2.811,2.827,2.845,2.861,2.877,2.894,2.910,2.926,2.942,2.958,2.972,2.996,
+      3.009,3.025,3.043,3.059,3.075,3.092,3.107,3.125,3.142,3.158,3.175,3.192,
+      3.209,3.227,3.243,3.261,3.278,3.294,3.311,3.328,3.345,3.361,3.377,3.394,
+      3.410,3.427,3.444,3.460,3.476,3.493,3.508,3.525,3.542,3.558,3.575,3.591,
+      3.609,3.626,3.644,3.660,3.678,3.695,3.712,3.729,3.746,3.763,3.779,3.796,
+      3.812,3.830,3.846,3.857,3.877,3.894,3.910,3.926,3.943,3.959,3.975,3.992,
+      4.008,4.024,4.042,4.058,4.076,4.092,4.110,4.127,4.144,4.161,4.178,4.193,
+      4.206,4.219,4.237,4.255,4.273,4.292,4.310,4.328,4.346,4.361,4.378,4.393,
+      4.410,4.427,4.443,4.461,4.477,4.495,4.511,4.529,4.547,4.563,4.581,4.598,
+      4.615,4.631,4.649,4.665,4.682,4.698,4.715,4.732,4.749,4.765,4.782,4.798,
+      4.815,4.831,4.848,4.864,4.881,4.898,4.915,4.932,4.949,4.967,4.984,5.001,
+      5.017,5.036,5.052,5.069,5.086,5.102)
+    BAND_BIN_UNIT                = MICROMETER
+    BAND_BIN_ORIGINAL_BAND = (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,
+      19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,
+      43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,
+      67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,
+      91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,
+      111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,
+      129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,
+      147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,
+      165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,
+      183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,
+      201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,
+      219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,
+      237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,
+      255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,
+      273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,
+      291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,
+      309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,
+      327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,
+      345,346,347,348,349,350,351)
+  END_GROUP                      = BAND_BIN
+  
+END_OBJECT                       = SPECTRAL_QUBE
+
+END

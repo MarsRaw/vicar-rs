@@ -1,0 +1,104 @@
+PDS_VERSION_ID                  = PDS3
+RECORD_TYPE                     = FIXED_LENGTH
+RECORD_BYTES                    = 1024
+FILE_RECORDS                    = 804
+^VICAR_HEADER                   = ("C3580800_RAW.IMG", 1)
+^ENGINEERING_TABLE              = ("C3580800_RAW.IMG", 2)
+^IMAGE                          = ("C3580800_RAW.IMG", 4)
+^VICAR_EXTENSION_HEADER         = ("C3580800_RAW.IMG", 804)
+
+DATA_SET_ID                     = "VG1/VG2-S-ISS-2/3/4/6-PROCESSED-V1.1"
+PRODUCT_ID                      = "C3580800_RAW.IMG"
+PRODUCT_CREATION_TIME           = 2012-05-01T16:00:00
+SOURCE_PRODUCT_ID               = "C3580800.IMQ"
+PRODUCT_TYPE                    = DECOMPRESSED_RAW_IMAGE
+
+/* Image Description  */
+
+INSTRUMENT_HOST_NAME            = "VOYAGER 1"
+INSTRUMENT_HOST_ID              = VG1
+INSTRUMENT_NAME                 = "IMAGING SCIENCE SUBSYSTEM - NARROW ANGLE"
+INSTRUMENT_ID                   = "ISSN"
+MISSION_PHASE_NAME              = "SATURN ENCOUNTER"
+TARGET_NAME                     = "SATURN"
+IMAGE_ID                        = "1444S1+028"
+IMAGE_NUMBER                    = "35808.00"
+IMAGE_TIME                      = 1980-12-11T18:57:23.00
+EARTH_RECEIVED_TIME             = 1980-12-11T20:19:56
+SCAN_MODE_ID                    = "3:1"
+SHUTTER_MODE_ID                 = "BOTSIM"
+GAIN_MODE_ID                    = "LOW"
+EDIT_MODE_ID                    = "1:1"
+FILTER_NAME                     = "UV"
+FILTER_NUMBER                   = "7"
+EXPOSURE_DURATION               = 15.360 <SECOND>
+
+START_TIME                      = 1980-12-11T18:57:07.64
+STOP_TIME                       = 1980-12-11T18:57:23.00
+SPACECRAFT_CLOCK_START_COUNT    = "35807:59:544"
+SPACECRAFT_CLOCK_STOP_COUNT     = "35808:00:001"
+
+NOTE                            = "NONE"
+
+DESCRIPTION                     = "This image is the result of decompressing
+the corresponding source image C3580800.IMQ as found on one of the Voyager ISS
+CD-ROMs. It was expanded using VICAR routine VGRCDCOPY on a Compaq Alpha
+running OpenVMS. It contains the raw image as an array of 800x800 unsigned
+bytes, with 224 prefix bytes of undocumented engineering information at the
+beginning of each line.
+
+See file DOCUMENT/PROCESSING.TXT for more information about the image
+processing."
+
+OBJECT                          = VICAR_HEADER
+  HEADER_TYPE                   = VICAR
+  BYTES                         = 1024
+  RECORDS                       = 1
+  INTERCHANGE_FORMAT            = ASCII
+  DESCRIPTION                   = "VICAR format label for the image."
+END_OBJECT                      = VICAR_HEADER
+
+OBJECT                          = ENGINEERING_TABLE
+  INTERCHANGE_FORMAT            = BINARY
+  ROWS                          = 2
+  COLUMNS                       = 1
+  ROW_BYTES                     = 1024
+  DESCRIPTION                   = "Engineering information in an undocumented
+binary format."
+
+  OBJECT                        = COLUMN
+    NAME                        = BINARY_HEADER_BYTES
+    START_BYTE                  = 1
+    BYTES                       = 1024
+    DATA_TYPE                   = CHARACTER
+    FORMAT                      = "A1024"
+    DESCRIPTION                 = "Placeholder column for the undocumented
+binary engineering information."
+  END_OBJECT                    = COLUMN
+END_OBJECT                      = ENGINEERING_TABLE
+
+OBJECT                          = IMAGE
+  LINES                         = 800
+  LINE_SAMPLES                  = 800
+  LINE_PREFIX_BYTES             = 224  /* undocumented */
+  SAMPLE_TYPE                   = UNSIGNED_INTEGER
+  SAMPLE_BITS                   = 8
+  SAMPLE_BIT_MASK               = 2#11111111#
+  SAMPLE_DISPLAY_DIRECTION      = RIGHT
+  LINE_DISPLAY_DIRECTION        = DOWN
+  HORIZONTAL_PIXEL_FOV          = 5.2250E-04 <DEGREE> /* approximate */
+  VERTICAL_PIXEL_FOV            = 5.2250E-04 <DEGREE> /* approximate */
+  HORIZONTAL_FOV                = 0.4180     <DEGREE> /* approximate */
+  VERTICAL_FOV                  = 0.4180     <DEGREE> /* approximate */
+  REFLECTANCE_SCALING_FACTOR    = 4.0202E-03          /* approximate */
+END_OBJECT                      = IMAGE
+
+OBJECT                          = VICAR_EXTENSION_HEADER
+  HEADER_TYPE                   = VICAR
+  BYTES                         = 1024
+  RECORDS                       = 1
+  INTERCHANGE_FORMAT            = ASCII
+  DESCRIPTION                   = "Continuation of the VICAR header."
+END_OBJECT                      = VICAR_EXTENSION_HEADER
+
+END

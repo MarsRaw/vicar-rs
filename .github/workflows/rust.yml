@@ -15,8 +15,6 @@ jobs:
     steps:
     - name: "Checkout repo"
       uses: actions/checkout@v3
-      with:
-        submodules: recursive
     - uses: "actions-rs/toolchain@v1"
       with:
         profile: "minimal"
@@ -32,8 +30,6 @@ jobs:
     steps:
     - name: "Checkout repo"
       uses: actions/checkout@v3
-      with:
-        submodules: recursive
 
     - uses: "actions-rs/toolchain@v1"
       with:
@@ -51,8 +47,6 @@ jobs:
     steps:
     - name: "Checkout repo"
       uses: actions/checkout@v3
-      with:
-        submodules: recursive
 
     - uses: "actions-rs/toolchain@v1"
       with:
@@ -73,8 +67,6 @@ jobs:
     steps:
     - name: "Checkout repo"
       uses: actions/checkout@v3
-      with:
-        submodules: recursive
 
     - uses: "actions-rs/toolchain@v1"
       with:
