@@ -323,7 +323,6 @@ impl VicarReader {
                     .unwrap();
 
                 let referenced_image_file_path = p.parent().unwrap().join(Path::new(&filename));
-                println!("File Path: {:?}", referenced_image_file_path);
 
                 let strings = VicarReader::read_vicar_to_string_lossy(&referenced_image_file_path)?;
                 let reader = BinFileReader::new(&referenced_image_file_path);
