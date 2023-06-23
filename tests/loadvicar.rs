@@ -1,6 +1,6 @@
 use itertools::iproduct;
 use sciimg::prelude::*;
-use vicar::*;
+use vicar::vicar::*;
 
 macro_rules! test_from_img {
     ($fn_name:ident, $img_path:expr, $out_file:expr, $lbl_byte:expr, $lbl_size:expr) => {

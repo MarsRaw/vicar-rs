@@ -1,6 +1,6 @@
 [package]
 name = "vicar"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Kevin M. Gill <apoapsys@gmail.com>"]
 description = "VICAR file format support"
@@ -11,7 +11,6 @@ name = "vicar"
 
 [dependencies]
 sciimg = {git = "https://github.com/MarsRaw/sciimg.git", branch = "kmgill_develop", features = ["rayon"]}
-pvl = {git = "https://github.com/MarsRaw/pvl.git"}
 itertools = "0.10.5"
 anyhow = "1.0.65"
 regex = "1.7.0"

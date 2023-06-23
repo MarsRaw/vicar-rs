@@ -656,16 +656,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pvl"
-version = "0.1.0"
-source = "git+https://github.com/MarsRaw/pvl.git#38c57e99c9e35426744b4c20a5c86eca198859d6"
-dependencies = [
- "anyhow",
- "lazy_static",
- "regex",
-]
-
-[[package]]
 name = "qoi"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -965,12 +955,11 @@ checksum = "d22af068fba1eb5edcb4aea19d382b2a3deb4c8f9d475c589b6ada9e0fd493ee"
 
 [[package]]
 name = "vicar"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "itertools",
  "lazy_static",
- "pvl",
  "regex",
  "sciimg",
 ]
