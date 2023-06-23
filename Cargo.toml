@@ -10,8 +10,8 @@ license = "MIT"
 name = "vicar"
 
 [dependencies]
-sciimg = {git = "https://github.com/kmgill/sciimg.git", branch = "kmgill_develop", features = ["rayon"]}
-pvl = {git = "https://github.com/kmgill/pvl.git"}
+sciimg = {git = "https://github.com/MarsRaw/sciimg.git", branch = "kmgill_develop", features = ["rayon"]}
+pvl = {git = "https://github.com/MarsRaw/pvl.git"}
 itertools = "0.10.5"
 anyhow = "1.0.65"
 regex = "1.7.0"

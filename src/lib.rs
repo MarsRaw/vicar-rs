@@ -129,6 +129,12 @@ impl fmt::Display for VicarError {
     }
 }
 
+impl From<anyhow::Error> for VicarError {
+    fn from(value: anyhow::Error) -> Self {
+        VicarError::General(t!(value))
+    }
+}
+
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum ValueType {
     Undetermined,
@@ -583,17 +589,22 @@ impl VicarReader {
 
         let start = self.data_start + byte_index;
         match self.format {
-            PixelFormat::Byte => Ok(self.reader.read_u8(start) as f32),
-            PixelFormat::Half | PixelFormat::Word => {
-                Ok(self.reader.read_i16_with_endiness(start, Endian::BigEndian) as f32)
-            }
-            PixelFormat::Full | PixelFormat::Long => {
-                Ok(self.reader.read_i32_with_endiness(start, Endian::BigEndian) as f32)
-            }
-            PixelFormat::Real => Ok(self.reader.read_f32_with_endiness(start, Endian::BigEndian)),
-            PixelFormat::Doub => {
-                Ok(self.reader.read_i64_with_endiness(start, Endian::BigEndian) as f32)
-            }
+            PixelFormat::Byte => Ok(self.reader.read_u8(start)? as f32),
+            PixelFormat::Half | PixelFormat::Word => Ok(self
+                .reader
+                .read_i16_with_endiness(start, Endian::BigEndian)?
+                as f32),
+            PixelFormat::Full | PixelFormat::Long => Ok(self
+                .reader
+                .read_i32_with_endiness(start, Endian::BigEndian)?
+                as f32),
+            PixelFormat::Real => Ok(self
+                .reader
+                .read_f32_with_endiness(start, Endian::BigEndian)?),
+            PixelFormat::Doub => Ok(self
+                .reader
+                .read_i64_with_endiness(start, Endian::BigEndian)?
+                as f32),
             PixelFormat::Comp | PixelFormat::Complex => todo!(),
         }
     }
