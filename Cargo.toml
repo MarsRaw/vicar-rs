@@ -1,6 +1,6 @@
 [package]
 name = "vicar"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Kevin M. Gill <apoapsys@gmail.com>"]
 description = "VICAR file format support"
@@ -10,8 +10,11 @@ license = "MIT"
 name = "vicar"
 
 [dependencies]
-sciimg = {git = "https://github.com/MarsRaw/sciimg.git", branch = "kmgill_develop", features = ["rayon"]}
-itertools = "0.10.5"
+sciimg = {git = "https://github.com/MarsRaw/sciimg.git", branch = "main", features = ["rayon"]}
+itertools = "0.14.0"
 anyhow = "1.0.65"
 regex = "1.7.0"
 lazy_static = "1.4.0"
+
+[patch.crates-io]
+jpeg-decoder = { git = "https://github.com/MarsRaw/jpeg-decoder.git", branch = "optional-zero-ac63" }

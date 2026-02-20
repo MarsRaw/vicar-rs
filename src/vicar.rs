@@ -489,7 +489,7 @@ impl VicarReader {
         index >= self.strings.len()
     }
 
-    fn _scan_for_property(strings: &String, key: &str) -> Result<usize, VicarError> {
+    fn _scan_for_property(strings: &str, key: &str) -> Result<usize, VicarError> {
         let key_eq = format!("{}=", key);
         for i in 0..(strings.len() - key_eq.len()) {
             if strings[i..(i + key_eq.len())] == key_eq {
@@ -504,7 +504,7 @@ impl VicarReader {
         VicarReader::_scan_for_property(&self.strings, key)
     }
 
-    fn _has_property(strings: &String, key: &str) -> bool {
+    fn _has_property(strings: &str, key: &str) -> bool {
         VicarReader::_scan_for_property(strings, key).is_ok()
     }
 
@@ -512,7 +512,7 @@ impl VicarReader {
         VicarReader::_has_property(&self.strings, key)
     }
 
-    fn _has_internal_label(strings: &String) -> bool {
+    fn _has_internal_label(strings: &str) -> bool {
         VicarReader::_has_property(strings, "LBLSIZE")
     }
 
