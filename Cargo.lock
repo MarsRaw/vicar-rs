@@ -1264,7 +1264,7 @@ dependencies = [
 [[package]]
 name = "sciimg"
 version = "0.7.0"
-source = "git+https://github.com/MarsRaw/sciimg.git?branch=cahvore_simplification#5a36f808e6eb3e2903dd4615b0bd29be26ef0173"
+source = "git+https://github.com/MarsRaw/sciimg.git?branch=main#0aaf768f5157937a0cf20357d160616b8bf9a3bf"
 dependencies = [
  "anyhow",
  "chrono",

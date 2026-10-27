@@ -10,7 +10,7 @@ license = "MIT"
 name = "vicar"
 
 [dependencies]
-sciimg = { git = "https://github.com/MarsRaw/sciimg.git", branch = "cahvore_simplification", features = [
+sciimg = { git = "https://github.com/MarsRaw/sciimg.git", branch = "main", features = [
     "rayon",
 ] }
 itertools = "0.15.0"
