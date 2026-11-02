@@ -270,7 +270,16 @@ impl fmt::Display for VicarReader {
         write!(
             f,
             "Dimensions {}, Record Size: {}, Data Start: {}, Lines: {}, Samples: {}, Bands: {}, Organization: {:?}, Format: {:?}, Type: {:?}, NBB: {}, NLB: {}",
-            self.dimensions, self.recsize, self.data_start, self.lines, self.samples, self.bands, self.org, self.format, self.data_type, self.binary_bytes_before_record,
+            self.dimensions,
+            self.recsize,
+            self.data_start,
+            self.lines,
+            self.samples,
+            self.bands,
+            self.org,
+            self.format,
+            self.data_type,
+            self.binary_bytes_before_record,
             self.binary_bytes_header
         )
     }
